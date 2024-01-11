@@ -33,6 +33,21 @@ server.get("/products", async (req, res, next) => {
   }
 });
 
+server.post("/products", async (req, res, next) => {
+  try {
+    const product = new Product(req.body);
+    const savedProduct = await product.save();
+    res.status(201).json({
+      id: savedProduct._id,
+      name: savedProduct.name,
+      price: savedProduct.price,
+      category: savedProduct.category,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 server.use((err, req, res, next) => {
   console.log(err);
   res.status(500).send("Something went wrong");
